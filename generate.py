@@ -49,6 +49,12 @@ def parse_args() -> argparse.Namespace:
         default="",
     )
     parser.add_argument(
+        "--difficulty",
+        type=str,
+        help="Filter by specific difficulty. Defaults to getting all the problems.",
+        default="",
+    )
+    parser.add_argument(
         "--output-file", type=str, help="Output filename", default=OUTPUT_FILE
     )
 
@@ -107,7 +113,7 @@ async def generate_anki_note(
 
 
 async def generate(
-    start: int, stop: int, page_size: int, list_id: str, output_file: str
+    start: int, stop: int, page_size: int, list_id: str, difficulty:str, output_file: str
 ) -> None:
     """
     Generate an Anki deck
@@ -181,7 +187,10 @@ async def generate(
 
     note_generators: List[Awaitable[LeetcodeNote]] = []
 
-    task_handles = await leetcode_data.all_problems_handles()
+    if difficulty in ("Easy", "Medium", "Hard"):
+        task_handles = await leetcode_data.specific_problems_handles(difficulty)
+    else:
+        task_handles = await leetcode_data.all_problems_handles()
 
     logging.info("Generating flashcards")
     for leetcode_task_handle in task_handles:
@@ -201,14 +210,15 @@ async def main() -> None:
     """
     args = parse_args()
 
-    start, stop, page_size, list_id, output_file = (
+    start, stop, page_size, list_id, difficulty, output_file = (
         args.start,
         args.stop,
         args.page_size,
         args.list_id,
+        args.difficulty,
         args.output_file,
     )
-    await generate(start, stop, page_size, list_id, output_file)
+    await generate(start, stop, page_size, list_id, difficulty, output_file)
 
 
 if __name__ == "__main__":

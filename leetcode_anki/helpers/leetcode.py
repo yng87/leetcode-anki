@@ -273,6 +273,14 @@ class LeetcodeData:
         """
         return list(self._cache.keys())
 
+    async def specific_problems_handles(self, difficulty) -> List[str]:
+        """
+        Get specific problem handles known filtered by difficulty.
+
+        Example: ["two-sum", "three-sum"]
+        """
+        return [title for title, problem in self._cache.items() if problem.difficulty == difficulty]
+
     def _get_problem_data(
         self, problem_slug: str
     ) -> leetcode.models.graphql_question_detail.GraphqlQuestionDetail:
