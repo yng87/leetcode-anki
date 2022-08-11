@@ -69,3 +69,8 @@ python generate.py
 ```
 
 You'll get `leetcode.apkg` file, which you can import directly to your anki app.
+
+## Filter by difficulty
+```
+python generate.py --difficulty Medium --output-file leetcode_medium.apkg
+```
